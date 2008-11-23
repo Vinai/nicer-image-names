@@ -107,7 +107,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
 		if (! $file) return 0;
 		
 		foreach ($product->getMediaGalleryImages() as $image) {
-			if ($image->getFile() == $file) return $image->getId();
+			if ($image->getFile() == $file) return $image->getPosition(); //return $image->getId();
 		}
 		// image not found in media gallery...
 		return 0;
