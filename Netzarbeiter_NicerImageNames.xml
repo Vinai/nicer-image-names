@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Netzarbeiter_NicerImageNames>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Netzarbeiter_NicerImageNames>
+    </modules>
+</config>
+

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Netzarbeiter_NicerImageNames>
+            <version>0.1.0</version>
+        </Netzarbeiter_NicerImageNames>
+    </modules>
+
+    <global>
+    	<models>
+			<catalog>
+				<rewrite>
+					<product_image>Netzarbeiter_NicerImageNames_Model_Image</product_image>
+				</rewrite>
+			</catalog>
+    	</models>
+    	<helpers>
+    		<catalog>
+    			<rewrite>
+    				<image>Netzarbeiter_NicerImageNames_Helper_Image</image>
+    			</rewrite>
+    		</catalog>
+    	</helpers>
+    </global>
+
+	<adminhtml>
+        <translate>
+            <modules>
+                <Netzarbeiter_NicerImageNames>
+                     <files>
+                          <default>Netzarbeiter_NicerImageNames.csv</default>
+                     </files>
+                </Netzarbeiter_NicerImageNames>
+            </modules>
+        </translate>
+	</adminhtml>
+	
+    <default>
+    	<catalog>
+    		<nicerimagenames>
+    			<disable_ext>0</disable_ext>
+    			<map>example.com-%manufacturer-%sku</map>
+    		</nicerimagenames>
+    	</catalog>
+    </default>
+</config>
+
