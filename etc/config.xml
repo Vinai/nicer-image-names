@@ -40,6 +40,7 @@
     		<nicerimagenames>
     			<disable_ext>0</disable_ext>
     			<map>example.com-%manufacturer-%sku</map>
+    			<lowercase>0</lowercase>
     		</nicerimagenames>
     	</catalog>
     </default>

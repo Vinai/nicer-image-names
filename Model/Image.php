@@ -136,8 +136,11 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
         $path = implode('/', $path);
         if (! Mage::getStoreConfig("catalog/nicerimagenames/disable_ext")) {
         	$file = $this->_getNiceFileName($path, $file);
+        	if (Mage::getStoreConfig("catalog/nicerimagenames/lowercase")) {
+        		$file = strtolower($file);
+        	}
         }
-        
+    	
         // append prepared filename
         $this->_newFile = $path . $file; // the $file contains heading slash
 
@@ -145,8 +148,7 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
     }
     
     /**
-     * Return the filename with the correct number if the file is cached
-     * otherwise return the filename with an unused number for this product
+     * Return the filename with the correct number
      *
      * @param string $path
      * @param string $file
@@ -180,7 +182,8 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
     			if ($m[1] > $num) $num = $m[1];
     		}
     	}
-    	return sprintf("/%s/%s-%d.%s", $pathExt, $file, $num+1, $extension);
+    	$file = sprintf("/%s/%s-%d.%s", $pathExt, $file, $num+1, $extension);
+    	return $file;
     }
     
     /**
