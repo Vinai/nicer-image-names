@@ -1,3 +1,5 @@
 "Nicer Image Names","Nicer Image Names"
 "Disable NicerImageNames Extension","Disable Extension"
 "Image Name Map (use %attribute to include an attribute value in the image name, e.g. %sku)","Image Name Map (use %attribute to include an attribute value in the image name, e.g. %sku)"
+"Make Images Unique by appending a number","Make Images Unique by appending a number"
+"Lowercase Image Names","Lowercase Image Names"

@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Netzarbeiter_NicerImageNames>
-            <version>0.1.0</version>
+            <version>0.1.1</version>
         </Netzarbeiter_NicerImageNames>
     </modules>
 
@@ -40,6 +40,7 @@
     		<nicerimagenames>
     			<disable_ext>0</disable_ext>
     			<map>example.com-%manufacturer-%sku</map>
+    			<unique>1</unique>
     			<lowercase>0</lowercase>
     		</nicerimagenames>
     	</catalog>

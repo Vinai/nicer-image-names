@@ -60,9 +60,8 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
      */
 	protected function _getNiceCacheName($attributeName)
 	{
-		// make sure the product is loaded completely
-		if (! $this->getProduct()->getMediaGalleryImages()) {
-			$this->getProduct()->load($this->getProduct()->getId());
+		if (Mage::getStoreConfig("catalog/nicerimagenames/unique"))
+		{
 		}
 		
 		$map = Mage::getStoreConfig("catalog/nicerimagenames/map");
@@ -71,7 +70,11 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
 				$map = str_replace($m[1][$i], $this->_getProductAttributeValue($m[2][$i]), $map);
 			}
 		}
-		$map .= '-' . $this->_imageAttributeNameToNum($attributeName) . $this->_getMediaGalleryId();
+		if (Mage::getStoreConfig("catalog/nicerimagenames/unique")) {
+			$map .= '-' . $this->_imageAttributeNameToNum($attributeName);
+			$map .= $this->_getMediaGalleryId();
+		}
+		
 		return $map;
 	}
 	
@@ -79,12 +82,18 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
 	 * Return the value of an attribute
 	 *
 	 * @param string $attribute_code
+	 * @para, boolean $_sentry
 	 * @return string
 	 */
-	protected function _getProductAttributeValue($attribute_code)
+	protected function _getProductAttributeValue($attribute_code, $_sentry = false)
 	{
 		if (! $value = $this->getProduct()->getAttributeText($attribute_code)) {
 			$value = $this->getProduct()->getDataUsingMethod($attribute_code);
+		}
+		if (! isset($value) && ! $_sentry) {
+			// last try, load image and get attribute again
+			$this->getProduct()->load($this->getProduct()->getId());
+			return $this->_getProductAttributeValue($attribute_code, $_sentry = true);
 		}
 		// haha
 		if (! is_scalar($value)) return $attribute_code;
@@ -105,8 +114,12 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
 			$file = $product->getData($this->_getModel()->getDestinationSubdir());
 		}
 		if (! $file) return 0;
-		
-		foreach ($product->getMediaGalleryImages() as $image) {
+	
+		if (! ($gallery = $product->getMediaGalleryImages())) {
+			$product->load($product->getId());
+			$gallery = $product->getMediaGalleryImages();
+		}
+		foreach ($gallery as $image) {
 			if ($image->getFile() == $file) return $image->getPosition(); //return $image->getId();
 		}
 		// image not found in media gallery...
