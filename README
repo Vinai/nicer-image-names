@@ -24,8 +24,8 @@ Author: Vinai Kopp <vinai@netzarbeiter.com>
 
 USAGE
 
-This small extension lets you specify how the product images filenames
-should be built. Customers saving images then always have neat
+This small extension builds the image file names from product attributes,
+allowing Customers saving images then always have neat
 descriptive image names, and you don't have to do the work before
 uploading them.
 
@@ -42,6 +42,10 @@ All other parts of the map will be left just like they are.
 
 Thanks to t3pke from http://www.keurigonline.nl/ for whom I created the extension for
 letting me share it!
+
+Overridden classes:
+ Mage_Catalog_Model_Product_Image
+ Mage_Catalog_Helper_Image
 
 KNOWN BUGS:
 - None! :D
