@@ -4,6 +4,9 @@
         <Netzarbeiter_NicerImageNames>
             <active>true</active>
             <codePool>community</codePool>
+			<depends>
+				<Mage_Catalog />
+			</depends>
         </Netzarbeiter_NicerImageNames>
     </modules>
 </config>
