@@ -87,18 +87,40 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
 	 */
 	protected function _getProductAttributeValue($attribute_code, $_sentry = false)
 	{
-		if (! $value = $this->getProduct()->getAttributeText($attribute_code)) {
+		/*
+		if (! $product->getData('media_gallery'))
+		{
+			if ($backend = $this->_getMediaBackend($product))
+			{
+				$backend->afterLoad($product);
+			}
+		}
+		 */
+		$attribute = $this->getProduct()->getResource()->getAttribute($attribute_code);
+		if ($attribute->usesSource())
+		{
+			$value = $this->getProduct()->getAttributeText($attribute_code);
+		}
+		else
+		{
 			$value = $this->getProduct()->getDataUsingMethod($attribute_code);
 		}
 		if (! isset($value) && ! $_sentry) {
-			// last try, load image and get attribute again
-			$this->getProduct()->load($this->getProduct()->getId());
+			// last try, load attribute
+			$this->_loadAttributeOnProduct($this->getProduct());
 			return $this->_getProductAttributeValue($attribute_code, $_sentry = true);
 		}
 		// haha
 		if (! is_scalar($value)) return $attribute_code;
 		
 		return str_replace(' ', '-', preg_replace('@(/|\.\.)@', '_', strval($value)));
+	}
+
+	protected function _loadAttributeOnProduct(Mage_Catalog_Model_Product $product)
+	{
+		$data = $product->getData();
+		$product->load($product->getId())->addData($data);
+		return $this;
 	}
 	
 	/**
