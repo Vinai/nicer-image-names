@@ -107,7 +107,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
 		}
 		if (! isset($value) && ! $_sentry) {
 			// last try, load attribute
-			$this->_loadAttributeOnProduct($this->getProduct());
+			$this->_loadAttributesOnProduct($this->getProduct());
 			return $this->_getProductAttributeValue($attribute_code, $_sentry = true);
 		}
 		// haha
@@ -116,7 +116,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
 		return str_replace(' ', '-', preg_replace('@(/|\.\.)@', '_', strval($value)));
 	}
 
-	protected function _loadAttributeOnProduct(Mage_Catalog_Model_Product $product)
+	protected function _loadAttributesOnProduct(Mage_Catalog_Model_Product $product)
 	{
 		$data = $product->getData();
 		$product->load($product->getId())->addData($data);
@@ -138,7 +138,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
 		if (! $file) return 0;
 	
 		if (! ($gallery = $product->getMediaGalleryImages())) {
-			$product->load($product->getId());
+			$this->_loadAttributesOnProduct($product);
 			$gallery = $product->getMediaGalleryImages();
 		}
 		foreach ($gallery as $image) {
