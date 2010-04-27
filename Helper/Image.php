@@ -85,7 +85,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
 	 * @para, boolean $_sentry
 	 * @return string
 	 */
-	protected function _getProductAttributeValue($attribute_code, $_sentry = false)
+	protected function _getProductAttributeValue($attributeName, $_sentry = false)
 	{
 		/*
 		if (! $product->getData('media_gallery'))
@@ -96,6 +96,10 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
 			}
 		}
 		 */
+		/*
+		 * Transform camelCase to underscore (e.g. productName => product_name)
+		 */
+		$attribute_code = strtolower(preg_replace('/(.)([A-Z])/', "$1_$2", $attributeName));
 		$attribute = $this->getProduct()->getResource()->getAttribute($attribute_code);
 		if ($attribute->usesSource())
 		{

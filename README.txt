@@ -39,13 +39,13 @@ the products sku.
 You can use any attribute that returns a scalar value (string, integer, float, boolean)
 Simply prefix the attribute code with a %
 All other parts of the map will be left just like they are.
+If you want to add an attribute with an underscore in the attribute_code (e.g.
+short_description), you have to capitalize the character after the underscore and
+remove the _ characters. e.g: short_description becomes shortDescription.
+
 
 Thanks to t3pke from http://www.keurigonline.nl/ for whom I created the extension for
 letting me share it!
-
-Overridden classes:
- Mage_Catalog_Model_Product_Image
- Mage_Catalog_Helper_Image
 
 KNOWN BUGS:
 - None! :D
