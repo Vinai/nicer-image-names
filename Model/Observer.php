@@ -1,0 +1,17 @@
+<?php
+
+class Netzarbeiter_NicerImageNames_Model_Observer
+{
+	/**
+	 * Override the payment helper for magento versions < 1.4
+	 *
+	 * @param Varien_Event_Observer $observer
+	 */
+	public function controllerFrontInitBefore($observer)
+	{
+		if (version_compare(Mage::getVersion(), '1.4.1', '<'))
+		{
+			Mage::getConfig()->setNode('global/models/catalog/rewrite/product_image', 'Netzarbeiter_NicerImageNames_Model_Pre141_Image');
+		}
+	}
+}

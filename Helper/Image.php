@@ -59,11 +59,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
      * @return string
      */
 	protected function _getNiceCacheName($attributeName)
-	{
-		if (Mage::getStoreConfig("catalog/nicerimagenames/unique"))
-		{
-		}
-		
+	{	
 		$map = Mage::getStoreConfig("catalog/nicerimagenames/map");
 		if (preg_match_all('/(%([a-z0-9]+))/i', $map, $m, PREG_PATTERN_ORDER)) {
 			for ($i = 0; $i < count($m[1]); $i++) {
@@ -128,7 +124,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
 	}
 	
 	/**
-	 * Return the numeric position if the image in the mdeia gallery array
+	 * Return the numeric position if the image in the media gallery array
 	 *
 	 * @return integer
 	 */
@@ -176,10 +172,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
 	 */
 	public function log($var)
 	{
-		ob_start();
-		print_r($var);
-		$var = ob_get_contents();
-		ob_end_clean();
+		$var = print_r($var, 1);
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') $var = str_replace("\n", "\r\n", $var);
 		Mage::log($var);
 	}

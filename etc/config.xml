@@ -2,12 +2,15 @@
 <config>
     <modules>
         <Netzarbeiter_NicerImageNames>
-            <version>0.1.4</version>
+            <version>0.1.5</version>
         </Netzarbeiter_NicerImageNames>
     </modules>
 
     <global>
     	<models>
+			<nicerimagenames>
+				<class>Netzarbeiter_NicerImageNames_Model</class>
+			</nicerimagenames>
 			<catalog>
 				<rewrite>
 					<product_image>Netzarbeiter_NicerImageNames_Model_Image</product_image>
@@ -21,6 +24,17 @@
     			</rewrite>
     		</catalog>
     	</helpers>
+		<events>
+			<controller_front_init_before>
+				<observers>
+					<nicerimagenames>
+						<type>singleton</type>
+						<class>nicerimagenames/observer</class>
+						<method>controllerFrontInitBefore</method>
+					</nicerimagenames>
+				</observers>
+			</controller_front_init_before>
+		</events>
     </global>
 
 	<adminhtml>

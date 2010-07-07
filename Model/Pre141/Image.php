@@ -32,7 +32,7 @@
  * @package    Netzarbeiter_NicerImageNames
  * @author     Vinai Kopp <vinai@netzarbeiter.com>
  */
-class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Product_Image
+class Netzarbeiter_NicerImageNames_Model_Pre141_Image extends Mage_Catalog_Model_Product_Image
 {
 	/**
 	 * This will be used as the file name in the cache
@@ -184,6 +184,28 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
     	}
     	$file = sprintf("/%s/%s-%d.%s", $pathExt, $file, $num+1, $extension);
     	return $file;
+    }
+    
+    /**
+     * Convert array of 3 items (decimal r, g, b) to string of their hex values
+     * Need to include this method because it's private in Mage_Catalog_Model_Product_Image
+     * for some reason that escapes me.
+     *
+     * @param array $rgbArray
+     * @return string
+     */
+    private function _rgbToString($rgbArray)
+    {
+        $result = array();
+        foreach ($rgbArray as $value) {
+            if (null === $value) {
+                $result[] = 'null';
+            }
+            else {
+                $result[] = sprintf('%02s', dechex($value));
+            }
+        }
+        return implode($result);
     }
 }
 
