@@ -3,7 +3,7 @@
 class Netzarbeiter_NicerImageNames_Model_Observer
 {
 	/**
-	 * Override the payment helper for magento versions < 1.4
+	 * Override the catalog product image model for magento versions < 1.4.1
 	 *
 	 * @param Varien_Event_Observer $observer
 	 */
