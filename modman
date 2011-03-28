@@ -1,0 +1,9 @@
+#
+# Netzarbeiter_NicerImageNames modman file
+#
+
+app/etc/modules/Netzarbeiter_NicerImageNames.xml app/etc/modules/Netzarbeiter_NicerImageNames.xml
+app/code/community/Netzarbeiter/NicerImageNames app/code/community/Netzarbeiter/NicerImageNames
+
+app/locale/de_DE/Netzarbeiter_NicerImageNames.csv app/locale/de_DE/Netzarbeiter_NicerImageNames.csv
+app/locale/en_US/Netzarbeiter_NicerImageNames.csv app/locale/en_US/Netzarbeiter_NicerImageNames.csv
