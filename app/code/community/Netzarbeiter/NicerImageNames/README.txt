@@ -43,6 +43,9 @@ If you want to add an attribute with an underscore in the attribute_code (e.g.
 short_description), you have to capitalize the character after the underscore and
 remove the _ characters. e.g: short_description becomes shortDescription.
 
+In addition to product attributes you can also use %request_host to specify the
+domain name of the current request.
+
 
 Thanks to t3pke from http://www.keurigonline.nl/ for whom I created the extension for
 letting me share it!
