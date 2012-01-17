@@ -63,7 +63,12 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
 		$map = Mage::getStoreConfig("catalog/nicerimagenames/map");
 		if (preg_match_all('/(%([a-z0-9]+))/i', $map, $m, PREG_PATTERN_ORDER)) {
 			for ($i = 0; $i < count($m[1]); $i++) {
-				$map = str_replace($m[1][$i], $this->_getProductAttributeValue($m[2][$i]), $map);
+                if ('request_host' === $m[2][$i]) {
+                    $value = Mage::app()->getRequest()->getHttpHost(true);
+                } else {
+                    $value = $this->_getProductAttributeValue($m[2][$i]);
+                }
+				$map = str_replace($m[1][$i], $value, $map);
 			}
 		}
 		if (Mage::getStoreConfig("catalog/nicerimagenames/unique")) {
