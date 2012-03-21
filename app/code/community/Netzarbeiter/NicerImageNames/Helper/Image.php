@@ -118,7 +118,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
 		// haha
 		if (! is_scalar($value)) return $attribute_code;
 		
-		return str_replace(' ', '-', preg_replace('@(/|\.\.)@', '_', strval($value)));
+		return str_replace(array(' ', '#', '"', "'"), '-', preg_replace('@(/|\.\.)@', '_', strval($value)));
 	}
 
 	protected function _loadAttributesOnProduct(Mage_Catalog_Model_Product $product)
