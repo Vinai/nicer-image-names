@@ -1,47 +1,36 @@
+Nicer Image Names
+========================
+Build the image file names from product attributes so they have neat descriptive image names.
 
- **
- * Magento
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
- *
- * package    Netzarbeiter_NicerImageNames
- * copyright  Copyright (c) 2010 Vinai Kopp http://netzarbeiter.com/
- * license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- **
+Facts
+-----
+- version: check the [config.xml](https://github.com/Vinai/nicer-image-names/blob/master/app/code/community/Netzarbeiter/NicerImageNames/etc/config.xml)
+- extension key: Netzarbeiter_NicerImageNames
+- [extension on Magento Connect](http://www.magentocommerce.com/magento-connect/netzarbeiter-nicerimagenames.html)
+- Magento Connect 1.0 extension key: magento-community/Netzarbeiter_NicerImageNames
+- Magento Connect 2.0 extension key: http://connect20.magentocommerce.com/community/Netzarbeiter_NicerImageNames
+- [extension on GitHub](https://github.com/Vinai/nicer-image-names)
+- [direct download link](https://github.com/Vinai/nicer-image-names/zipball/master)
 
-
-Magento Module: Netzarbeiter/NicerImageNames
-Author: Vinai Kopp <vinai@netzarbeiter.com>
-
-
-USAGE
-
-This small extension builds the image file names from product attributes,
-allowing Customers saving images then always have neat
-descriptive image names, and you don't have to do the work before
-uploading them.
+Description
+-----------
+This small extension builds the image file names from product attributes, allowing Customers saving images then
+always have neat descriptive image names, and you don't have to do the work before uploading them.
 
 The way image names are build can be specified in the configuration under
-System / Configurataion / Catalog / Nicer Image Names
+System - Configurataion - Catalog - Nicer Image Names
 
 It works like this example map:
+```
   netzarbeiter.de-%manufacturer-%sku
-The %manufacturer will be replaced with the products manufacturer, the %sku with
-the products sku.
-You can use any attribute that returns a scalar value (string, integer, float, boolean)
+```
+The %manufacturer will be replaced with the products manufacturer, the %sku with the products sku.
+You can use any attribute that returns a scalar value (string, integer, float, boolean).
 Simply prefix the attribute code with a %
 All other parts of the map will be left just like they are.
-If you want to add an attribute with an underscore in the attribute_code (e.g.
-short_description), you have to capitalize the character after the underscore and
-remove the _ characters. e.g: short_description becomes shortDescription.
+If you want to add an attribute with an underscore in the attribute_code (e.g. short_description), you have to
+capitalize the character after the underscore and remove
+the _ characters. e.g: short_description becomes shortDescription.
 
 In addition to product attributes you can also use %requestHost to specify the
 domain name of the current request.
@@ -50,12 +39,35 @@ Here is an example image name template string:
 %requestHost-%urlKey%manufacturer-%sku
 
 
-Thanks to t3pke from http://www.keurigonline.nl/ for whom I created the extension for
-letting me share it!
+Compatibility
+-------------
+- Magento >= 1.1
 
-KNOWN BUGS:
-- None! :D
+Installation Instructions
+-------------------------
+1. Install the extension via Magento Connect with the key shown above or copy all the files into your document root.
+2. Clear the cache, logout from the admin panel and then login again.
+3. Configure and activate the extension under System - Configurataion - Catalog - Nicer Image Names
 
-If you have ideas for improvements or find bugs, please send them to vinai@netzarbeiter.com,
-with Netzarbeiter_NicerImageNames as part of the subject line.
+Support
+-------
+If you have any issues with this extension, open an issue on GitHub (see URL above)
 
+Contribution
+------------
+Any contributions are highly appreciated. The best way to contribute code is to open a
+[pull request on GitHub](https://help.github.com/articles/using-pull-requests).
+
+Developer
+---------
+Vinai Kopp
+[http://www.netzarbeiter.com](http://www.netzarbeiter.com)
+[@VinaiKopp](https://twitter.com/VinaiKopp)
+
+Licence
+-------
+[OSL - Open Software Licence 3.0](http://opensource.org/licenses/osl-3.0.php)
+
+Copyright
+---------
+(c) 2012 Vinai Kopp
