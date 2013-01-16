@@ -30,7 +30,7 @@ Simply prefix the attribute code with a %
 All other parts of the map will be left just like they are.
 If you want to add an attribute with an underscore in the attribute_code (e.g. short_description), you have to
 capitalize the character after the underscore and remove
-the _ characters. e.g: short_description becomes shortDescription.
+the _ characters. For example, short_description becomes shortDescription.
 
 In addition to product attributes you can also use %requestHost to specify the
 domain name of the current request.
