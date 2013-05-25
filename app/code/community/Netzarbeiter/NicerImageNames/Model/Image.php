@@ -34,40 +34,41 @@
  */
 class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Product_Image
 {
-	/**
-	 * This will be used as the file name in the cache
-	 *
-	 * @var string
-	 */
-	protected $_niceCacheName = '';
-	
-	/**
-	 * Set the cache file base name
-	 *
-	 * @param string $name
-	 * @see Netzarbeiter_NicerImageNames_Helper_Image::init()
-	 */
-	public function setNiceCacheName($name)
-	{
-		$this->_niceCacheName = $name;
-	}
-	
-	/**
-	 * Return the cache file base name
-	 *
-	 * @return string
-	 * @see Netzarbeiter_NicerImageNames_Helper_Image::init()
-	 */
-	public function getNiceCacheName()
-	{
-		return $this->_niceCacheName;
-	}
-	
+    /**
+     * This will be used as the file name in the cache
+     *
+     * @var string
+     */
+    protected $_niceCacheName = '';
+
+    /**
+     * Set the cache file base name
+     *
+     * @param string $name
+     * @see Netzarbeiter_NicerImageNames_Helper_Image::init()
+     */
+    public function setNiceCacheName($name)
+    {
+        $this->_niceCacheName = $name;
+    }
+
+    /**
+     * Return the cache file base name
+     *
+     * @return string
+     * @see Netzarbeiter_NicerImageNames_Helper_Image::init()
+     */
+    public function getNiceCacheName()
+    {
+        return $this->_niceCacheName;
+    }
+
     /**
      * Set filenames for base file and new file
      *
      * @param string $file
      * @return Mage_Catalog_Model_Product_Image
+     * @throws Mage_Core_Exception
      */
     public function setBaseFile($file)
     {
@@ -86,20 +87,20 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
         }
         if (!$file) {
             // check if placeholder defined in config
-            $isConfigPlaceholder = Mage::getStoreConfig("catalog/placeholder/{$this->getDestinationSubdir()}_placeholder");
-            $configPlaceholder   = '/placeholder/' . $isConfigPlaceholder;
+            $isConfigPlaceholder = Mage::getStoreConfig(
+                "catalog/placeholder/{$this->getDestinationSubdir()}_placeholder"
+            );
+            $configPlaceholder = '/placeholder/' . $isConfigPlaceholder;
             if ($isConfigPlaceholder && file_exists($baseDir . $configPlaceholder)) {
                 $file = $configPlaceholder;
-            }
-            else {
+            } else {
                 // replace file with skin or default skin placeholder
-                $skinBaseDir     = Mage::getDesign()->getSkinBaseDir();
+                $skinBaseDir = Mage::getDesign()->getSkinBaseDir();
                 $skinPlaceholder = "/images/catalog/product/placeholder/{$this->getDestinationSubdir()}.jpg";
                 $file = $skinPlaceholder;
                 if (file_exists($skinBaseDir . $file)) {
                     $baseDir = $skinBaseDir;
-                }
-                else {
+                } else {
                     $baseDir = Mage::getDesign()->getSkinBaseDir(array('_theme' => 'default'));
                 }
             }
@@ -108,7 +109,7 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
         $baseFile = $baseDir . $file;
 
         if ((!$file) || (!file_exists($baseFile))) {
-            throw new Exception(Mage::helper('catalog')->__('Image file not found'));
+            Mage::throwException(Mage::helper('catalog')->__('Image file not found'));
         }
         $this->_baseFile = $baseFile;
 
@@ -119,34 +120,35 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
             Mage::app()->getStore()->getId(),
             $path[] = $this->getDestinationSubdir()
         );
-        if((!empty($this->_width)) || (!empty($this->_height)))
+        if ((!empty($this->_width)) || (!empty($this->_height))) {
             $path[] = "{$this->_width}x{$this->_height}";
+        }
         // add misc params as a hash
         $path[] = md5(
             implode('_', array(
-                ($this->_keepAspectRatio  ? '' : 'non') . 'proportional',
-                ($this->_keepFrame        ? '' : 'no')  . 'frame',
-                ($this->_keepTransparency ? '' : 'no')  . 'transparency',
-                ($this->_constrainOnly ? 'do' : 'not')  . 'constrainonly',
+                ($this->_keepAspectRatio ? '' : 'non') . 'proportional',
+                ($this->_keepFrame ? '' : 'no') . 'frame',
+                ($this->_keepTransparency ? '' : 'no') . 'transparency',
+                ($this->_constrainOnly ? 'do' : 'not') . 'constrainonly',
                 $this->_rgbToString($this->_backgroundColor),
                 'angle' . $this->_angle,
             ))
         );
-        
+
         $path = implode('/', $path);
-        if (! Mage::getStoreConfig("catalog/nicerimagenames/disable_ext")) {
-        	$file = $this->_getNiceFileName($path, $file);
-        	if (Mage::getStoreConfig("catalog/nicerimagenames/lowercase")) {
-        		$file = strtolower($file);
-        	}
+        if (!Mage::getStoreConfig("catalog/nicerimagenames/disable_ext")) {
+            $file = $this->_getNiceFileName($path, $file);
+            if (Mage::getStoreConfig("catalog/nicerimagenames/lowercase")) {
+                $file = strtolower($file);
+            }
         }
-    	
+
         // append prepared filename
         $this->_newFile = $path . $file; // the $file contains heading slash
 
         return $this;
     }
-    
+
     /**
      * Return the filename with the correct number
      *
@@ -158,32 +160,32 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
     {
         // add the image name without the file type extension to the image cache path
         $pos = strrpos($file, '.');
-    	$pathExt = substr($file, 1, $pos -1);
-        $extension = substr($file, $pos+1);
-    	
-    	$file = $this->getNiceCacheName();
-    	return sprintf('/%s/%s.%s', $pathExt, $file, $extension);
-    	
-    	$fileGlob = sprintf("%s/%s/%s-*.%s", $path, $pathExt, $file, $extension);
-    	if (($res = glob($fileGlob))) {
-    		// found a match, return extended basename with leading slash
-    		return sprintf('/%s/%s', $pathExt, basename($res[0]));
-    	}
-    	// no match found, find an unused number
-    	$fileGlob = sprintf("%s/*/%s-*.%s", $path, $file, $extension);
-    	if (! ($res = glob($fileGlob))) {
-    		// no image for this product has been cached so far
-    		return sprintf("/%s/%s-1.%s", $pathExt, $file, $extension);
-    	}
-    	$num = 0;
-    	$regex = sprintf('#-(\d+).%s$#', $extension);
-    	foreach ($res as $match) {
-    		if (preg_match($regex, $match, $m)) {
-    			if ($m[1] > $num) $num = $m[1];
-    		}
-    	}
-    	$file = sprintf("/%s/%s-%d.%s", $pathExt, $file, $num+1, $extension);
-    	return $file;
+        $pathExt = substr($file, 1, $pos - 1);
+        $extension = substr($file, $pos + 1);
+
+        $file = $this->getNiceCacheName();
+        return sprintf('/%s/%s.%s', $pathExt, $file, $extension);
+
+        $fileGlob = sprintf("%s/%s/%s-*.%s", $path, $pathExt, $file, $extension);
+        if (($res = glob($fileGlob))) {
+            // found a match, return extended basename with leading slash
+            return sprintf('/%s/%s', $pathExt, basename($res[0]));
+        }
+        // no match found, find an unused number
+        $fileGlob = sprintf("%s/*/%s-*.%s", $path, $file, $extension);
+        if (!($res = glob($fileGlob))) {
+            // no image for this product has been cached so far
+            return sprintf("/%s/%s-1.%s", $pathExt, $file, $extension);
+        }
+        $num = 0;
+        $regex = sprintf('#-(\d+).%s$#', $extension);
+        foreach ($res as $match) {
+            if (preg_match($regex, $match, $m) && $m[1] > $num) {
+                $num = $m[1];
+            }
+        }
+        $file = sprintf("/%s/%s-%d.%s", $pathExt, $file, $num + 1, $extension);
+        return $file;
     }
 }
 
