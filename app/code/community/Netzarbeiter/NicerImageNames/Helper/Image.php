@@ -174,14 +174,4 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
                 return 0;
         }
     }
-
-    /**
-     * Debug log method
-     *
-     * @param mixed $var
-     */
-    public function log($var)
-    {
-        Mage::log($var);
-    }
 }
