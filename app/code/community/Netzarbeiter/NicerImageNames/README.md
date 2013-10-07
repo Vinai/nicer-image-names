@@ -17,8 +17,10 @@ Description
 This small extension builds the image file names from product attributes, allowing Customers saving images then
 always have neat descriptive image names, and you don't have to do the work before uploading them.
 
-The way image names are build can be specified in the configuration under
-System - Configurataion - Catalog - Nicer Image Names
+It also can automatically generate ALT and TITLE tag content for images where its not explicitly set. 
+
+The way image names are built can be specified in the configuration under
+System - Configurataion - Catalog - Nicer Image Names [Netzarbeiter Extension]
 
 It works like this example map:
 ```
@@ -26,11 +28,13 @@ It works like this example map:
 ```
 The %manufacturer will be replaced with the products manufacturer, the %sku with the products sku.
 You can use any attribute that returns a scalar value (string, integer, float, boolean).
+
 Simply prefix the attribute code with a %
+
 All other parts of the map will be left just like they are.
 If you want to add an attribute with an underscore in the attribute_code (e.g. short_description), you have to
 capitalize the character after the underscore and remove
-the _ characters. For example, short_description becomes shortDescription.
+the _ characters. e.g: short_description becomes shortDescription.
 
 In addition to product attributes you can also use %requestHost to specify the
 domain name of the current request.
