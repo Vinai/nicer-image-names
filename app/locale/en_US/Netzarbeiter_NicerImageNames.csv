@@ -1,5 +1,14 @@
-"Nicer Image Names","Nicer Image Names"
+"Nicer Image Names [Netzarbeiter Extension]","Nicer Image Names [Netzarbeiter Extension]"
 "Disable NicerImageNames Extension","Disable Extension"
-"Image Name Map (use %attribute to include an attribute value in the image name, e.g. %sku)","Image Name Map (use %attribute to include an attribute value in the image name, e.g. %sku)"
-"Make Images Unique by appending a number","Make Images Unique by appending a number"
+"Image Name Map","Image Name Map"
+"Use %attribute to include an attribute value in the image name, e.g. %sku.","Use %attribute to include an attribute value in the image name, e.g. %sku."
+"Make Images Unique by appending a Number","Make Images Unique by appending a Number"
 "Lowercase Image Names","Lowercase Image Names"
+"Generate ALT Attributes if Emtpy","Generate ALT Attributes if Emtpy"
+"Select ""Yes"" to configure.","Select ""Yes"" to configure."
+"Select ""No"" to configure.","Select ""No"" to configure."
+"Use the same Map for ALT as for the File Names","Use the same Map for ALT as for the File Names"
+"ALT Name Map","ALT Name Map"
+
+
+

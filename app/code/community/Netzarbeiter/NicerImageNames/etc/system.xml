@@ -21,51 +21,102 @@
 -->
 <config>
     <sections>
-        <catalog translate="label" module="catalog"> 
+        <catalog> 
 			<show_in_store>1</show_in_store>
             <groups>
-                <nicerimagenames translate="label">
-                    <label>Nicer Image Names</label>
+                <nicerimagenames translate="label" module="nicerimagenames">
+                    <label>Nicer Image Names [Netzarbeiter Extension]</label>
                     <sort_order>565</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
-                        <disable_ext translate="label">
+                        <disable_ext translate="label" module="nicerimagenames">
                             <label>Disable NicerImageNames Extension</label>
                             <frontend_type>select</frontend_type>
 							<source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>1</sort_order>
+                            <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </disable_ext>
-						<map translate="label">
-							<label>Image Name Map (use %attribute to include an attribute value in the image name, e.g. %sku)</label>
-							<frontend_type>text</frontend_type>
-							<sort_order>2</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-						</map>
-                        <unique translate="label">
-                            <label>Make Images Unique by appending a number</label>
-                            <frontend_type>select</frontend_type>
-							<source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>3</sort_order>
+                        <map translate="label comment" module="nicerimagenames">
+                            <label>Image Name Map</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <comment>Use %attribute to include an attribute value in the image name, e.g. %sku.</comment>
+                            <depends>
+                                <disable_ext>0</disable_ext>
+                            </depends>
+                        </map>
+                        <unique translate="label" module="nicerimagenames">
+                            <label>Make Images Unique by appending a Number</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <disable_ext>0</disable_ext>
+                            </depends>
                         </unique>
-                        <lowercase translate="label">
+                        <lowercase translate="label" module="nicerimagenames">
                             <label>Lowercase Image Names</label>
                             <frontend_type>select</frontend_type>
-							<source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>4</sort_order>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <depends>
+                                <disable_ext>0</disable_ext>
+                            </depends>
                         </lowercase>
+                        <generate_labels translate="label comment" module="nicerimagenames">
+                            <label>Generate ALT Attributes if Emtpy</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select "Yes" to configure.</comment>
+                            <depends>
+                                <disable_ext>0</disable_ext>
+                            </depends>
+                        </generate_labels>
+                        <use_filename_map_for_labels translate="label comment" module="nicerimagenames">
+                            <label>Use the same Map for ALT as for the File Names</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select "No" to configure.</comment>
+                            <depends>
+                                <disable_ext>0</disable_ext>
+                                <generate_labels>1</generate_labels>
+                            </depends>
+                        </use_filename_map_for_labels>
+                        <label_map translate="label" module="nicerimagenames">
+                            <label>ALT Name Map</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Use %attribute to include an attribute value in the image name, e.g. %sku.</comment>
+                            <depends>
+                                <disable_ext>0</disable_ext>
+                                <generate_labels>1</generate_labels>
+                                <use_filename_map_for_labels>0</use_filename_map_for_labels>
+                            </depends>
+                        </label_map>
                     </fields>
                 </nicerimagenames>				
             </groups>

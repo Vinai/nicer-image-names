@@ -28,7 +28,7 @@
 <config>
     <modules>
         <Netzarbeiter_NicerImageNames>
-            <version>0.1.9</version>
+            <version>0.2.0</version>
         </Netzarbeiter_NicerImageNames>
     </modules>
 
@@ -43,13 +43,16 @@
 				</rewrite>
 			</catalog>
     	</models>
-    	<helpers>
-    		<catalog>
-    			<rewrite>
-    				<image>Netzarbeiter_NicerImageNames_Helper_Image</image>
-    			</rewrite>
-    		</catalog>
-    	</helpers>
+        <helpers>
+            <nicerimagenames>
+                <class>Netzarbeiter_NicerImageNames_Helper</class>
+            </nicerimagenames>
+            <catalog>
+                <rewrite>
+                    <image>Netzarbeiter_NicerImageNames_Helper_Image</image>
+                </rewrite>
+            </catalog>
+        </helpers>
 		<events>
 			<controller_front_init_before>
 				<observers>
@@ -82,6 +85,9 @@
     			<map>%requestHost-%manufacturer-%sku</map>
     			<unique>1</unique>
     			<lowercase>0</lowercase>
+                <generate_labels>0</generate_labels>
+                <use_filename_map_for_labels>1</use_filename_map_for_labels>
+                <label_map>%name %sku</label_map>
     		</nicerimagenames>
     	</catalog>
     </default>

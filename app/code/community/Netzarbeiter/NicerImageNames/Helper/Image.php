@@ -35,7 +35,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
      * Add the nice cache name to the image model
      *
      * @param Mage_Catalog_Model_Product $product
-     * @param string $attributeName
+     * @param string $attributeName One of 'image', 'small_image' or 'thumbnail'
      * @param string $imageFile
      * @return Netzarbeiter_NicerImageNames_Helper_Image
      */
@@ -43,20 +43,73 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
     {
         parent::init($product, $attributeName, $imageFile);
         if (!Mage::getStoreConfig("catalog/nicerimagenames/disable_ext")) {
-            $this->_getModel()->setNiceCacheName($this->_getNiceCacheName($attributeName));
+            $this->_getModel()->setNiceCacheName(
+                $this->_getGeneratedNameForImageAttribute($attributeName)
+            );
         }
+        if (Mage::getStoreConfig("catalog/nicerimagenames/generate_labels")) {
+            $this->_setNicerImageLabels($attributeName);
+        }
+        
         return $this;
+    }
+
+    /**
+     * Set the label on the product for the given image type, and also on the gallery images
+     * 
+     * @param string $attributeName One of 'image' or 'thumbnail' or 'small_image'
+     */
+    protected function _setNicerImageLabels($attributeName) {
+        $map = $this->_getNiceLabelMap();
+        $label = $this->_getGeneratedNameForImageAttribute($attributeName, $map, false);
+        
+        // Set it on the product (used for the main product image in the view media template)
+        $key = $attributeName . '_label';
+        if (! $this->getProduct()->getData($key)) {
+            $this->getProduct()->setData($attributeName . '_label', $label);
+
+            // Set label as info on the image gallery
+
+            // Usually 'thumbnail' but hardcoded in .phtml so faking it here with a "special" name
+            $galleryImage = 'gallery'; 
+            
+            $label = $this->_getGeneratedNameForImageAttribute($galleryImage, $map, false);
+            foreach ($this->getProduct()->getMediaGalleryImages() as $image) {
+                if (! $image->getLabel()) {
+                    $image->setLabel($label);
+                }
+            }
+        }
+    }
+
+    /**
+     * Return the label name template according to the config settings
+     * 
+     * @return string
+     */
+    protected function _getNiceLabelMap()
+    {
+        if (Mage::getStoreConfig("catalog/nicerimagenames/use_filename_map_for_labels")) {
+            $map = Mage::getStoreConfig("catalog/nicerimagenames/map");
+        } else {
+            $map = Mage::getStoreConfig("catalog/nicerimagenames/label_map");
+        }
+        return $map;
     }
 
     /**
      * Build the nice image cache name from the config setting
      *
-     * @param string
+     * @param string $attributeName One of 'image', 'small_image' or 'thumbnail'
+     * @param string $map The template to use to generate the value
+     * @param bool $forFiles Should the returned value be usable as a file name  
      * @return string
      */
-    protected function _getNiceCacheName($attributeName)
+    protected function _getGeneratedNameForImageAttribute($attributeName, $map = null, $forFiles = true)
     {
-        $map = Mage::getStoreConfig("catalog/nicerimagenames/map");
+        if (! isset($map)) {
+            $map = Mage::getStoreConfig("catalog/nicerimagenames/map");
+        }
         if (preg_match_all('/(%([a-z0-9]+))/i', $map, $match, PREG_PATTERN_ORDER)) {
             for ($i = 0; $i < count($match[1]); $i++) {
                 if ('requestHost' === $match[2][$i]) {
@@ -64,6 +117,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
                 } else {
                     $value = $this->_getProductAttributeValue($match[2][$i]);
                 }
+                $value = $this->_prepareValue($value, $forFiles);
                 $map = str_replace($match[1][$i], $value, $map);
             }
         }
@@ -71,14 +125,35 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
             $map .= '-' . $this->_imageAttributeNameToNum($attributeName);
             $map .= $this->_getMediaGalleryId();
         }
+        
+        // Replace multiple spaces or - with one of it's kind
+        $value = preg_replace('/([ -]){2,}/', '$1', $map);
 
-        return $map;
+        return $value;
+    }
+
+    /**
+     * Prepare a string so it may be used as part of a a file name
+     * 
+     * @param string $value
+     * @param bool $forFiles
+     * @return mixed
+     */
+    protected function _prepareValue($value, $forFiles = true)
+    {
+        if ($forFiles) {
+            // not needed if this is for image labels
+            $value = preg_replace('@(?:/|\.\.)@', '_', strval($value));
+            $value = str_replace(array(' ', '#', '"', "'"), '-', $value);
+            $value = str_replace(array('%'), '', $value);
+        }
+        return $value;
     }
 
     /**
      * Return the value of an attribute
      *
-     * @param string $attributeName
+     * @param string $attributeName One of 'image', 'small_image' or 'thumbnail'
      * @param boolean $_sentry
      * @return string
      */
@@ -112,13 +187,17 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
         if (!is_scalar($value)) {
             return $attributeCode;
         }
-
-        $value = preg_replace('@(/|\.\.)@', '_', strval($value));
-        $value = str_replace(array(' ', '#', '"', "'"), '-', $value);
-        $value = str_replace(array('%'), '', $value);
+        
         return $value;
     }
 
+    /**
+     * This method is pretty evil. I don't think I want to keep that, even if it reduces
+     * the number of support requests...
+     * 
+     * @param Mage_Catalog_Model_Product $product
+     * @return $this
+     */
     protected function _loadAttributesOnProduct(Mage_Catalog_Model_Product $product)
     {
         $data = $product->getData();
@@ -135,9 +214,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
     {
         $product = $this->getProduct();
 
-        if (!($file = $this->getImageFile())) {
-            $file = $product->getData($this->_getModel()->getDestinationSubdir());
-        }
+        $file = $this->_getImageFile();
         if (!$file) {
             return 0;
         }
@@ -153,6 +230,17 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
         }
         // image not found in media gallery...
         return 0;
+    }
+
+    /**
+     * @return string The image file name
+     */
+    protected function _getImageFile()
+    {
+        if (!($file = $this->getImageFile())) {
+            $file = $this->getProduct()->getData($this->_getModel()->getDestinationSubdir());
+        }
+        return $file;
     }
 
     /**
