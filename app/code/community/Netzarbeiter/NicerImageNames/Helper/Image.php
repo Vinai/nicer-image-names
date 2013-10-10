@@ -180,7 +180,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
         }
         if (!isset($value) && !$_sentry) {
             // last try, load attribute
-            $this->_loadAttributesOnProduct($this->getProduct());
+            $this->_loadAttributeOnProduct($this->getProduct(), $attributeCode);
             return $this->_getProductAttributeValue($attributeCode, $_sentry = true);
         }
         // haha
@@ -192,16 +192,25 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
     }
 
     /**
-     * This method is pretty evil. I don't think I want to keep that, even if it reduces
-     * the number of support requests...
+     * Load a single attribute value onto a product. 
+     * 
+     * This method is not nice. I only keep it because if it reduces
+     * the number of support requests, when people specify attributes
+     * in the template string but don't have them loaded on product
+     * collections.
      * 
      * @param Mage_Catalog_Model_Product $product
+     * @param string $attributeCode
      * @return $this
      */
-    protected function _loadAttributesOnProduct(Mage_Catalog_Model_Product $product)
+    protected function _loadAttributeOnProduct(Mage_Catalog_Model_Product $product, $attributeCode)
     {
-        $data = $product->getData();
-        $product->load($product->getId())->addData($data);
+        $value = $product->getResource()->getAttributeRawValue(
+            $product->getId(),
+            $attributeCode,
+            Mage::app()->getStore()->getId()
+        );
+        $product->setData($attributeCode, $value);
         return $this;
     }
 
