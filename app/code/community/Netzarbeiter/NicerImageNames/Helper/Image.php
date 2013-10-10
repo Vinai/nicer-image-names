@@ -69,14 +69,14 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
             $this->getProduct()->setData($attributeName . '_label', $label);
 
             // Set label as info on the image gallery
-
-            // Usually 'thumbnail' but hardcoded in .phtml so faking it here with a "special" name
-            $galleryImage = 'gallery'; 
-            
-            $label = $this->_getGeneratedNameForImageAttribute($galleryImage, $map, false);
-            foreach ($this->getProduct()->getMediaGalleryImages() as $image) {
-                if (! $image->getLabel()) {
-                    $image->setLabel($label);
+            if ($gallery = $this->getProduct()->getMediaGalleryImages()) {
+                // Usually 'thumbnail' but hardcoded in .phtml so faking it here with a "special" name
+                $galleryImage = 'gallery';
+                $label = $this->_getGeneratedNameForImageAttribute($galleryImage, $map, false);
+                foreach ($gallery as $image) {
+                    if (! $image->getLabel()) {
+                        $image->setLabel($label);
+                    }
                 }
             }
         }
@@ -218,14 +218,11 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
         if (!$file) {
             return 0;
         }
-
-        if (!($gallery = $product->getMediaGalleryImages())) {
-            $this->_loadAttributesOnProduct($product);
-            $gallery = $product->getMediaGalleryImages();
-        }
-        foreach ($gallery as $image) {
-            if ($image->getFile() == $file) {
-                return $image->getPosition(); //return $image->getId();
+        if ($gallery = $product->getMediaGalleryImages()) {
+            foreach ($gallery as $image) {
+                if ($image->getFile() == $file) {
+                    return $image->getPosition(); //return $image->getId();
+                }
             }
         }
         // image not found in media gallery...
