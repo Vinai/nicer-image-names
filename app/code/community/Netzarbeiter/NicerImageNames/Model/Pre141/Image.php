@@ -71,80 +71,18 @@ class Netzarbeiter_NicerImageNames_Model_Pre141_Image extends Mage_Catalog_Model
      */
     public function setBaseFile($file)
     {
-        if (($file) && (0 !== strpos($file, '/', 0))) {
-            $file = '/' . $file;
-        }
-        $baseDir = Mage::getSingleton('catalog/product_media_config')->getBaseMediaPath();
+        parent::setBaseFile($file);
 
-        if ('/no_selection' == $file) {
-            $file = null;
-        }
-        if ($file) {
-            if ((!file_exists($baseDir . $file)) || !$this->_checkMemory($baseDir . $file)) {
-                $file = null;
-            }
-        }
-        if (!$file) {
-            // check if placeholder defined in config
-            $isConfigPlaceholder = Mage::getStoreConfig(
-                "catalog/placeholder/{$this->getDestinationSubdir()}_placeholder"
-            );
-            $configPlaceholder = '/placeholder/' . $isConfigPlaceholder;
-            if ($isConfigPlaceholder && file_exists($baseDir . $configPlaceholder)) {
-                $file = $configPlaceholder;
-            } else {
-                // replace file with skin or default skin placeholder
-                $skinBaseDir = Mage::getDesign()->getSkinBaseDir();
-                $skinPlaceholder = "/images/catalog/product/placeholder/{$this->getDestinationSubdir()}.jpg";
-                $file = $skinPlaceholder;
-                if (file_exists($skinBaseDir . $file)) {
-                    $baseDir = $skinBaseDir;
-                } else {
-                    $baseDir = Mage::getDesign()->getSkinBaseDir(array('_theme' => 'default'));
-                }
-            }
-        }
-
-        $baseFile = $baseDir . $file;
-
-        if ((!$file) || (!file_exists($baseFile))) {
-            Mage::throwException(Mage::helper('catalog')->__('Image file not found'));
-        }
-        $this->_baseFile = $baseFile;
-
-        // build new filename (most important params)
-        $path = array(
-            Mage::getSingleton('catalog/product_media_config')->getBaseMediaPath(),
-            'cache',
-            Mage::app()->getStore()->getId(),
-            $path[] = $this->getDestinationSubdir()
-        );
-        if ((!empty($this->_width)) || (!empty($this->_height))) {
-            $path[] = "{$this->_width}x{$this->_height}";
-        }
-        // add misc params as a hash
-        $path[] = md5(
-            implode('_', array(
-                ($this->_keepAspectRatio ? '' : 'non') . 'proportional',
-                ($this->_keepFrame ? '' : 'no') . 'frame',
-                ($this->_keepTransparency ? '' : 'no') . 'transparency',
-                ($this->_constrainOnly ? 'do' : 'not') . 'constrainonly',
-                $this->_rgbToString($this->_backgroundColor),
-                'angle' . $this->_angle,
-            ))
-        );
-
-        $path = implode('/', $path);
         if (!Mage::getStoreConfig("catalog/nicerimagenames/disable_ext")) {
-            $file = $this->_getNiceFileName($path, $file);
+            // The $_newFile property is set during parent::setBaseFile()
+            list($path, $file) = $this->_getFilePathAndName($this->_newFile);
+
+            $file = $this->_getNiceFileName($file);
             if (Mage::getStoreConfig("catalog/nicerimagenames/lowercase")) {
                 $file = strtolower($file);
             }
+            $this->_newFile = $path . $file; // the $file contains heading slash
         }
-
-        // append prepared filename
-        $this->_newFile = $path . $file; // the $file contains heading slash
-
         return $this;
     }
 
@@ -155,7 +93,7 @@ class Netzarbeiter_NicerImageNames_Model_Pre141_Image extends Mage_Catalog_Model
      * @param string $file
      * @return string
      */
-    protected function _getNiceFileName($path, $file)
+    protected function _getNiceFileName($file)
     {
         // add the image name without the file type extension to the image cache path
         $pos = strrpos($file, '.');
@@ -164,27 +102,20 @@ class Netzarbeiter_NicerImageNames_Model_Pre141_Image extends Mage_Catalog_Model
 
         $file = $this->getNiceCacheName();
         return sprintf('/%s/%s.%s', $pathExt, $file, $extension);
+    }
 
-        $fileGlob = sprintf("%s/%s/%s-*.%s", $path, $pathExt, $file, $extension);
-        if (($res = glob($fileGlob))) {
-            // found a match, return extended basename with leading slash
-            return sprintf('/%s/%s', $pathExt, basename($res[0]));
-        }
-        // no match found, find an unused number
-        $fileGlob = sprintf("%s/*/%s-*.%s", $path, $file, $extension);
-        if (!($res = glob($fileGlob))) {
-            // no image for this product has been cached so far
-            return sprintf("/%s/%s-1.%s", $pathExt, $file, $extension);
-        }
-        $num = 0;
-        $regex = sprintf('#-(\d+).%s$#', $extension);
-        foreach ($res as $match) {
-            if (preg_match($regex, $match, $m) && $m[1] > $num) {
-                $num = $m[1];
-            }
-        }
-        $file = sprintf("/%s/%s-%d.%s", $pathExt, $file, $num + 1, $extension);
-        return $file;
+    /**
+     * Return the file path and file name as an array
+     *
+     * @param $file
+     * @return array
+     */
+    protected function _getFilePathAndName($file)
+    {
+        $path = dirname($file);
+        $file = '/' . basename($file);
+
+        return array($path, $file);
     }
 
     /**
