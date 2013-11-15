@@ -143,10 +143,14 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
     {
         if ($forFiles) {
             // not needed if this is for image labels
-            $value = preg_replace('@(?:/|\.\.)@', '_', strval($value));
-            $value = str_replace(array(' ', '#', '"', "'", ':'), '-', $value);
-            $value = str_replace(array('%'), '', $value);
+            $value = strtr($value, array(
+                '%' => '',  ' ' => '-', '#'  => '-', '"' => '-',
+                "'" => '-', ':' => '-', '..' => '_', '/' => '-'
+            ));
+            $value = Mage::helper('catalog/product_url')->format($value);
+            $value = trim($value, '-_');
         }
+        
         return $value;
     }
 
