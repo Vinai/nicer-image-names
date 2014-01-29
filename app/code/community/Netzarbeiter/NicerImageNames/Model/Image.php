@@ -82,6 +82,29 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
                 $file = strtolower($file);
             }
             $this->_newFile = $path . $file; // the $file contains heading slash
+            
+            if (defined('PHP_MAXPATHLEN')) {
+                $maxlen = PHP_MAXPATHLEN;
+            } else {
+                if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                    $maxlen = 255; // NTFS sucks
+                } else {
+                    $maxlen = 1024; // Safe assumption, probably more
+                }
+            }
+            if (strlen($this->_newFile) > $maxlen) {
+                // hack off as much as necessary to make it fit. Urg.
+                // See https://github.com/Vinai/nicer-image-names/issues/14 for more info
+                // This is no real solution, as there is no check if the resulting image
+                // still is in the right directory.
+                
+                // The proper thing to do is to not use Windows for hosting,
+                // or, not use attributes with looog values in the name template.
+                
+                list($pathExt, $extension) = $this->_getFileNameParts($this->_newFile);
+                $pathExt = substr($pathExt, 0, ($maxlen - strlen($extension) +1));
+                $this->_newFile = rtrim($pathExt, '/\\') . '.' . $extension;
+            }
         }
         return $this;
     }
@@ -109,12 +132,18 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
     protected function _getNiceFileName($file)
     {
         // add the image name without the file type extension to the image cache path
-        $pos = strrpos($file, '.');
-        $pathExt = substr($file, 1, $pos - 1);
-        $extension = substr($file, $pos + 1);
+        list($pathExt, $extension) = $this->_getFileNameParts($file);
 
         $file = $this->getNiceCacheName();
         return sprintf('/%s/%s.%s', $pathExt, $file, $extension);
+    }
+    
+    protected function _getFileNameParts($file)
+    {
+        $pos = strrpos($file, '.');
+        $pathExt = substr($file, 1, $pos - 1);
+        $extension = substr($file, $pos + 1);
+        return array($pathExt, $extension);
     }
 }
 
