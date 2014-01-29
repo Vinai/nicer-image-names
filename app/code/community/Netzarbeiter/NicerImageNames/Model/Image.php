@@ -108,7 +108,6 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
                 // The proper thing to do is to not use Windows for hosting,
                 // or, not use attributes with looog values in the name template.
                 
-                list($pathExt, $extension) = $this->_getFileNameParts($file);
                 $pathExt = substr($path . rtrim($pathExt, '/\\') . $pathExt, 0, ($maxlen - strlen($extension) - 2 ));
                 $this->_newFile = rtrim($pathExt, '/\\') . '.' . $extension;
             }
