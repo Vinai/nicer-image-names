@@ -20,7 +20,7 @@ always have neat descriptive image names, and you don't have to do the work befo
 It also can automatically generate ALT and TITLE tag content for images where its not explicitly set. 
 
 The way image names are built can be specified in the configuration under
-System - Configurataion - Catalog - Nicer Image Names [Netzarbeiter Extension]
+System - Configuration - Catalog - Nicer Image Names [Netzarbeiter Extension]
 
 It works like this example map:
 ```
