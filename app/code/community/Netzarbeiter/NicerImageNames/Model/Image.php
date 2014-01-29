@@ -76,10 +76,17 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
         if (!Mage::getStoreConfig("catalog/nicerimagenames/disable_ext")) {
             // The $_newFile property is set during parent::setBaseFile()
             list($path, $file) = $this->_getFilePathAndName($this->_newFile);
-            
             $file = $this->_getNiceFileName($file);
             if (Mage::getStoreConfig("catalog/nicerimagenames/lowercase")) {
                 $file = strtolower($file);
+            }
+            list($pathExt, $extension) = $this->_getFileNameParts($file);
+
+            // Check that generated filename is not longer than 255
+            $maxfilelen = 255;
+            if (strlen(basename($file) . $extension) > $maxfilelen) {
+                $file = substr($file, 0, ($maxfilelen - strlen($extension) + strlen(dirname($file))));
+                $file = $file . '.' . $extension;
             }
             $this->_newFile = $path . $file; // the $file contains heading slash
             
@@ -101,8 +108,7 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
                 // The proper thing to do is to not use Windows for hosting,
                 // or, not use attributes with looog values in the name template.
                 
-                list($pathExt, $extension) = $this->_getFileNameParts($this->_newFile);
-                $pathExt = substr($pathExt, 0, ($maxlen - strlen($extension) +1));
+                $pathExt = substr($path . rtrim($pathExt, '/\\') . $pathExt, 0, ($maxlen - strlen($extension) - 2 ));
                 $this->_newFile = rtrim($pathExt, '/\\') . '.' . $extension;
             }
         }
@@ -137,7 +143,13 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
         $file = $this->getNiceCacheName();
         return sprintf('/%s/%s.%s', $pathExt, $file, $extension);
     }
-    
+
+    /**
+     * Return the extended file path and extension
+     *
+     * @param string $file
+     * @return array
+     */
     protected function _getFileNameParts($file)
     {
         $pos = strrpos($file, '.');
