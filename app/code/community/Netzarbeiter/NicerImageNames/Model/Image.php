@@ -76,10 +76,17 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
         if (!Mage::getStoreConfig("catalog/nicerimagenames/disable_ext")) {
             // The $_newFile property is set during parent::setBaseFile()
             list($path, $file) = $this->_getFilePathAndName($this->_newFile);
-            
             $file = $this->_getNiceFileName($file);
             if (Mage::getStoreConfig("catalog/nicerimagenames/lowercase")) {
                 $file = strtolower($file);
+            }
+            list($pathExt, $extension) = $this->_getFileNameParts($file);
+
+            // Check that generated filename is not longer than 255
+            $maxfilelen = 255;
+            if (strlen(basename($file) . $extension) > $maxfilelen) {
+                $file = substr($file, 0, ($maxfilelen - strlen($extension) + strlen(dirname($file))));
+                $file = $file . '.' . $extension;
             }
             $this->_newFile = $path . $file; // the $file contains heading slash
             
