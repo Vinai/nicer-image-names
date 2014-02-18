@@ -4,10 +4,19 @@
 class Netzarbeiter_NicerImageNames_Test_Helper_ImageTest
     extends EcomDev_PHPUnit_Test_Case
 {
+    /**
+     * @var string
+     */
     protected $_class = 'Netzarbeiter_NicerImageNames_Helper_Image';
-    
+
+    /**
+     * @var Netzarbeiter_NicerImageNames_Helper_Image
+     */
     protected $_instance;
-    
+
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject
+     */
     protected $_mockProduct;
     
     public function setUp()
