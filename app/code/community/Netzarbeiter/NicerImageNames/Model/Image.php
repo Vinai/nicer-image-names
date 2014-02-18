@@ -137,7 +137,11 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
         $file = $this->getNiceCacheName();
         return sprintf('/%s/%s.%s', $pathExt, $file, $extension);
     }
-    
+
+    /**
+     * @param string $file
+     * @return array
+     */
     protected function _getFileNameParts($file)
     {
         $pos = strrpos($file, '.');

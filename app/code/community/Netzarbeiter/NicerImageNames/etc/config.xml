@@ -77,6 +77,14 @@
             </modules>
         </translate>
 	</adminhtml>
+
+    <phpunit>
+        <suite>
+            <modules>
+                <Netzarbeiter_NicerImageNames/>
+            </modules>
+        </suite>
+    </phpunit>
 	
     <default>
     	<catalog>
