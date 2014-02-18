@@ -45,6 +45,7 @@ class Netzarbeiter_NicerImageNames_Test_Helper_ImageTest
             array('ô', 'o', 'ô'),
             array('ç', 'c', 'ç'),
             array('æ', 'ae', 'æ'),
+            array('à', 'a', 'à'),
             array('a a', 'a-a', 'a a'),
             array('a  a', 'a-a', 'a a'), // double space
             array('a_a', 'a-a', 'a_a'),
