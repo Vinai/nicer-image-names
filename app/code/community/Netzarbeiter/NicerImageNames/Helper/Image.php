@@ -188,7 +188,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
          */
         $attributeCode = strtolower(preg_replace('/(.)([A-Z])/', "$1_$2", $attributeName));
         $attribute = $this->getProduct()->getResource()->getAttribute($attributeCode);
-        if ($attribute->usesSource()) {
+        if ($attribute && $attribute->usesSource()) {
             $value = $this->getProduct()->getAttributeText($attributeCode);
         } else {
             $value = $this->getProduct()->getDataUsingMethod($attributeCode);
