@@ -73,7 +73,7 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
     {
         parent::setBaseFile($file);
 
-        if (!Mage::getStoreConfig("catalog/nicerimagenames/disable_ext")) {
+        if (!Mage::getStoreConfig("catalog/nicerimagenames/disable_ext") && !$this->_isBaseFilePlaceholder) {
             // The $_newFile property is set during parent::setBaseFile()
             list($path, $file) = $this->_getFilePathAndName($this->_newFile);
             
