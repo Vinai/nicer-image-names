@@ -112,4 +112,54 @@ class Netzarbeiter_NicerImageNames_Test_Helper_ImageTest
         $result = $method->invoke($this->_instance, 'image', '%name', false);
         $this->assertEquals($expected, $result, "Unexpected result for '$name''");
     }
+
+    /**
+     * @param string $map
+     * @param array $expected
+     * @dataProvider mapProvider
+     */
+    public function testItShouldParsePlaceholders($map, array $expected)
+    {
+        $result = $this->_instance->getAttributePlaceholdersFromMap($map);
+        $this->assertEquals($expected, $result);
+    }
+    
+    public function mapProvider()
+    {
+        return array(
+            array('foo %foo', array(array('%foo', 'foo'))),
+            array('foo %fooBar', array(array('%fooBar', 'foo_bar'))),
+            array('foo %fooBarBaz', array(array('%fooBarBaz', 'foo_bar_baz'))),
+            array('foo %foo-Bar', array(array('%foo', 'foo'))),
+            array('foo %foo1-Bar', array(array('%foo1', 'foo1', ))),
+            array('foo %foo %bar', array(
+                array('%foo', 'foo'),
+                array('%bar', 'bar')
+            )),
+            array('foo %fooBar %barBaz', array(
+                array('%fooBar', 'foo_bar'),
+                array('%barBaz', 'bar_baz')
+            )),
+            array('foo %{foo}', array(array('%{foo}', 'foo'))),
+            array('foo %{fooBar}', array(array('%{fooBar}', 'foo_bar'))),
+            array('foo %{fooBarBaz}', array(array('%{fooBarBaz}', 'foo_bar_baz'))),
+            array('foo %{foo}-Bar', array(array('%{foo}', 'foo'))),
+            array('foo %{foo1}-Bar', array(array('%{foo1}', 'foo1', ))),
+            array('foo %{foo} %bar', array(
+                array('%{foo}', 'foo'),
+                array('%bar', 'bar')
+            )),
+            array('foo %{fooBar} %{barBaz}', array(
+                array('%{fooBar}', 'foo_bar'),
+                array('%{barBaz}', 'bar_baz')
+            )),
+            
+            array('foo %{foo} %{fooBar} %{fooBaz} %{foobar}', array(
+                array('%{foo}', 'foo'),
+                array('%{fooBar}', 'foo_bar'),
+                array('%{fooBaz}', 'foo_baz'),
+                array('%{foobar}', 'foobar'),
+            )),
+        );
+    }
 } 

@@ -110,16 +110,15 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
         if (! isset($map)) {
             $map = Mage::getStoreConfig("catalog/nicerimagenames/map");
         }
-        if (preg_match_all('/(%([a-z0-9]+))/i', $map, $match, PREG_PATTERN_ORDER)) {
-            for ($i = 0; $i < count($match[1]); $i++) {
-                if ('requestHost' === $match[2][$i]) {
-                    $value = Mage::app()->getRequest()->getHttpHost(true);
-                } else {
-                    $value = $this->_getProductAttributeValue($match[2][$i]);
-                }
-                $value = $this->_prepareValue($value, $forFiles);
-                $map = str_replace($match[1][$i], $value, $map);
+        foreach ($this->getAttributePlaceholdersFromMap($map) as $placeholder) {
+            list($placeholder, $attributeCode) = $placeholder;
+            if ('request_host' === $attributeCode) {
+                $value = Mage::app()->getRequest()->getHttpHost(true);
+            } else {
+                $value = $this->_getProductAttributeValue($attributeCode);
             }
+            $value = $this->_prepareValue($value, $forFiles);
+            $map = str_replace($placeholder, $value, $map);
         }
         if (Mage::getStoreConfig("catalog/nicerimagenames/unique")) {
             $map .= '-' . $this->_imageAttributeNameToNum($attributeName);
@@ -130,6 +129,23 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
         $value = preg_replace('/([ -]){2,}/', '$1', $map);
 
         return $value;
+    }
+
+    /**
+     * @param string $map
+     * @return array
+     */
+    public function getAttributePlaceholdersFromMap($map)
+    {
+        $placeholders = array();
+        if (preg_match_all('/(%{?([a-z0-9]+)}?)/i', $map, $match, PREG_PATTERN_ORDER)) {
+            for ($i = 0; $i < count($match[1]); $i++) {
+                $placeholder = $match[1][$i];
+                $attributeCode = strtolower(preg_replace('/(.)([A-Z])/', "$1_$2", $match[2][$i]));
+                $placeholders[] = array($placeholder, $attributeCode);
+            }
+        }
+        return $placeholders;
     }
 
     /**
@@ -168,11 +184,11 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
     /**
      * Return the value of an attribute
      *
-     * @param string $attributeName One of 'image', 'small_image' or 'thumbnail'
+     * @param string $attributeCode
      * @param boolean $_sentry
      * @return string
      */
-    protected function _getProductAttributeValue($attributeName, $_sentry = false)
+    protected function _getProductAttributeValue($attributeCode, $_sentry = false)
     {
         /*
         if (! $product->getData('media_gallery'))
@@ -186,7 +202,6 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
         /*
          * Transform camelCase to underscore (e.g. productName => product_name)
          */
-        $attributeCode = strtolower(preg_replace('/(.)([A-Z])/', "$1_$2", $attributeName));
         $attribute = $this->getProduct()->getResource()->getAttribute($attributeCode);
         if ($attribute && $attribute->usesSource()) {
             $value = $this->getProduct()->getAttributeText($attributeCode);
