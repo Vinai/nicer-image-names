@@ -36,6 +36,11 @@ If you want to add an attribute with an underscore in the attribute_code (e.g. s
 capitalize the character after the underscore and remove
 the _ characters. e.g: short_description becomes shortDescription.
 
+If you have an attribute codes that match another attribute completely, for example %text and %textColor, you might end up with the module always only parsing %text only.  
+In that case you can use %{textColor} to enforce the full attribute code to be used.  
+
+If product images are displayed in your skin's product listing then you will need to set the property "Used in product listing" to "Yes" under Catalog - Attributes - Manage Attributes for any attributes used.
+
 In addition to product attributes you can also use %requestHost to specify the
 domain name of the current request.
 
