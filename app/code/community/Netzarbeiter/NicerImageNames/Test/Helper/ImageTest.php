@@ -53,6 +53,8 @@ class Netzarbeiter_NicerImageNames_Test_Helper_ImageTest
             array('è', 'e', 'è'),
             array('ô', 'o', 'ô'),
             array('ç', 'c', 'ç'),
+            array('ã', 'a', 'ã'),
+            array('õ', 'o', 'õ'),
             array('æ', 'ae', 'æ'),
             array('à', 'a', 'à'),
             array('a a', 'a-a', 'a a'),
