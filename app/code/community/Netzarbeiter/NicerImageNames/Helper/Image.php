@@ -170,6 +170,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
                 '>' => '-',
             ));
             $value = Mage::helper('catalog/product_url')->format($value);
+            $value = strtr($value, array('ã' => 'a'));
             $value = trim($value, '-_');
         } else {
             // for labels only
