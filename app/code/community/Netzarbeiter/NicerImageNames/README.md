@@ -6,9 +6,9 @@ Facts
 -----
 - version: check the [config.xml](https://github.com/Vinai/nicer-image-names/blob/master/app/code/community/Netzarbeiter/NicerImageNames/etc/config.xml)
 - extension key: Netzarbeiter_NicerImageNames
-- [extension on Magento Connect](http://www.magentocommerce.com/magento-connect/netzarbeiter-nicerimagenames.html)
-- Magento Connect 1.0 extension key: magento-community/Netzarbeiter_NicerImageNames
-- Magento Connect 2.0 extension key: http://connect20.magentocommerce.com/community/Netzarbeiter_NicerImageNames
+- extension on Magento Connect: -
+- Magento Connect 1.0 extension key: -
+- Magento Connect 2.0 extension key: -
 - [extension on GitHub](https://github.com/Vinai/nicer-image-names)
 - [direct download link](https://github.com/Vinai/nicer-image-names/zipball/master)
 
@@ -54,7 +54,7 @@ Compatibility
 
 Installation Instructions
 -------------------------
-1. Install the extension via Magento Connect with the key shown above or copy all the files into your document root.
+1. Install the extension by copying all the files from the repository to the appropriate folders.
 2. Clear the cache, logout from the admin panel and then login again.
 3. Configure and activate the extension under System - Configurataion - Catalog - Nicer Image Names
 
