@@ -28,7 +28,7 @@
 <config>
     <modules>
         <Netzarbeiter_NicerImageNames>
-            <version>0.2.5</version>
+            <version>0.2.6</version>
         </Netzarbeiter_NicerImageNames>
     </modules>
 
@@ -93,6 +93,7 @@
     			<map>%requestHost-%manufacturer-%sku</map>
     			<unique>1</unique>
     			<lowercase>0</lowercase>
+                <hash_image_folder_name>0</hash_image_folder_name>
                 <generate_labels>0</generate_labels>
                 <use_filename_map_for_labels>1</use_filename_map_for_labels>
                 <label_map>%name %sku</label_map>

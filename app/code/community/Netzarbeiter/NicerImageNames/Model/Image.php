@@ -139,6 +139,10 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
     {
         // add the image name without the file type extension to the image cache path
         list($pathExt, $extension) = $this->_getFileNameParts($file);
+        
+        if (Mage::getStoreConfig("catalog/nicerimagenames/hash_image_folder_name")) {
+            $pathExt = md5($pathExt);
+        }
 
         $file = $this->getNiceCacheName();
         return sprintf('/%s/%s.%s', $pathExt, $file, $extension);

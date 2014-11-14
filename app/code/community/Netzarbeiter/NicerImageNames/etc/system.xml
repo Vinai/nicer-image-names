@@ -76,6 +76,19 @@
                                 <disable_ext>0</disable_ext>
                             </depends>
                         </lowercase>
+                        <hash_image_folder_name translate="label comment" module="nicerimagenames">
+                            <label>Hash the image name folder</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>45</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>The original file name is used as a folder to contain the renamed image. If you don't want that to be part of the image URL, switch this option to Yes.</comment>
+                            <depends>
+                                <disable_ext>0</disable_ext>
+                            </depends>
+                        </hash_image_folder_name>
                         <generate_labels translate="label comment" module="nicerimagenames">
                             <label>Generate ALT Attributes if Emtpy</label>
                             <frontend_type>select</frontend_type>

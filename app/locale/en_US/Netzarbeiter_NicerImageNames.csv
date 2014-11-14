@@ -9,6 +9,5 @@
 "Select ""No"" to configure.","Select ""No"" to configure."
 "Use the same Map for ALT as for the File Names","Use the same Map for ALT as for the File Names"
 "ALT Name Map","ALT Name Map"
-
-
-
+"The original file name is used as a folder to contain the renamed image. If you don't want that to be part of the image URL, switch this option to Yes.","The original file name is used as a folder to contain the renamed image. If you don't want that to be part of the image URL, switch this option to Yes."
+"Hash the image name folder","Hash the image name folder"
