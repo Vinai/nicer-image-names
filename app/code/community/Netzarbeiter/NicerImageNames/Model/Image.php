@@ -161,6 +161,36 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
         $extension = substr($file, $pos + 1);
         return array($pathExt, $extension);
     }
+    
+    /**
+     * Overrides the parent method. It checks the base file change time, 
+     * and if cached file is older - we concider an image is not cached
+     *
+     * @param string $file
+     * @return array
+     */
+    public function isCached()
+    {
+        if (Mage::getStoreConfig("catalog/nicerimagenames/disable_ext")) {
+        	// use parent method if nicerimagenames disabled
+            return parent::isCached();
+        }
+
+        if (!$this->_fileExists($this->_newFile)) {
+            return false;
+        }
+
+        if (!file_exists($this->_baseFile)) {
+            return true;
+        }
+
+        if (filemtime($this->_newFile) < filemtime($this->_baseFile)) {
+            // checks the base file change time, and if cached file is older - we concider an image is not cached
+            return false;
+        }
+
+        return true;
+    }
 }
 
 
