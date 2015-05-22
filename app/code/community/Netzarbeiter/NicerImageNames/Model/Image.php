@@ -166,8 +166,7 @@ class Netzarbeiter_NicerImageNames_Model_Image extends Mage_Catalog_Model_Produc
      * Overrides the parent method. It checks the base file change time, 
      * and if cached file is older - we concider an image is not cached
      *
-     * @param string $file
-     * @return array
+     * @return bool
      */
     public function isCached()
     {
