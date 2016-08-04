@@ -93,6 +93,7 @@
     			<map>%requestHost-%manufacturer-%sku</map>
     			<unique>1</unique>
     			<lowercase>0</lowercase>
+                <append_file_hash>0</append_file_hash>
                 <hash_image_folder_name>0</hash_image_folder_name>
                 <generate_labels>0</generate_labels>
                 <use_filename_map_for_labels>1</use_filename_map_for_labels>
