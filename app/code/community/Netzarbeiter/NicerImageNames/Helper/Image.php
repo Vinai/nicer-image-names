@@ -124,6 +124,10 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
             $map .= '-' . $this->_imageAttributeNameToNum($attributeName);
             $map .= $this->_getMediaGalleryId();
         }
+
+        if (Mage::getStoreConfigFlag("catalog/nicerimagenames/append_file_hash")) {
+            $map .= '_' . sha1_file($this->__toString());
+        }
         
         // Replace multiple spaces or - with one of it's kind
         $value = preg_replace('/([ -]){2,}/', '$1', $map);
