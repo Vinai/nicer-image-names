@@ -208,11 +208,16 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
          * Transform camelCase to underscore (e.g. productName => product_name)
          */
         $attribute = $this->getProduct()->getResource()->getAttribute($attributeCode);
-        if ($attribute && $attribute->usesSource()) {
+
+        // $attribute->usesSource() *seems* like the sane thing to do here, however, that
+        // method will incorrectly return true if getSource() has previously been called
+        // on the attribute per GitHub issue #32
+        if ($attribute && in_array($attribute->getFrontendInput(), array('select', 'multiselect'))) {
             $value = $this->getProduct()->getAttributeText($attributeCode);
         } else {
             $value = $this->getProduct()->getDataUsingMethod($attributeCode);
         }
+
         if (!isset($value) && !$_sentry) {
             // last try, load attribute
             $this->_loadAttributeOnProduct($this->getProduct(), $attributeCode);
