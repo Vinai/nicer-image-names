@@ -171,7 +171,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
             $value = strtr($value, array(
                 '%' => '',  ' ' => '-', '#'  => '-', '"' => '-', '<' => '-',
                 "'" => '-', ':' => '-', '..' => '_', '/' => '-', '_' => '-',
-                '>' => '-',
+                '>' => '-', '+' => '-'
             ));
             $value = Mage::helper('catalog/product_url')->format($value);
             $value = strtr($value, array('ã' => 'a'));
