@@ -50,19 +50,19 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
         if (Mage::getStoreConfig("catalog/nicerimagenames/generate_labels")) {
             $this->_setNicerImageLabels($attributeName);
         }
-        
+
         return $this;
     }
 
     /**
      * Set the label on the product for the given image type, and also on the gallery images
-     * 
+     *
      * @param string $attributeName One of 'image' or 'thumbnail' or 'small_image'
      */
     protected function _setNicerImageLabels($attributeName) {
         $map = $this->_getNiceLabelMap();
         $label = $this->_getGeneratedNameForImageAttribute($attributeName, $map, false);
-        
+
         // Set it on the product (used for the main product image in the view media template)
         $key = $attributeName . '_label';
         if (! $this->getProduct()->getData($key)) {
@@ -84,7 +84,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
 
     /**
      * Return the label name template according to the config settings
-     * 
+     *
      * @return string
      */
     protected function _getNiceLabelMap()
@@ -102,7 +102,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
      *
      * @param string $attributeName One of 'image', 'small_image' or 'thumbnail'
      * @param string $map The template to use to generate the value
-     * @param bool $forFiles Should the returned value be usable as a file name  
+     * @param bool $forFiles Should the returned value be usable as a file name
      * @return string
      */
     protected function _getGeneratedNameForImageAttribute($attributeName, $map = null, $forFiles = true)
@@ -128,7 +128,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
         if (Mage::getStoreConfigFlag("catalog/nicerimagenames/append_file_hash")) {
             $map .= '_' . sha1_file($this->__toString());
         }
-        
+
         // Replace multiple spaces or - with one of it's kind
         $value = preg_replace('/([ -]){2,}/', '$1', $map);
 
@@ -154,7 +154,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
 
     /**
      * Prepare a string so it may be used as part of a a file name
-     * 
+     *
      * @param string $value
      * @param bool $forFiles
      * @return mixed
@@ -165,13 +165,14 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
         $value = strtr($value, array(
             '&' => 'and',
         ));
-        
+
         if ($forFiles) {
             // not needed if this is for image labels
             $value = strtr($value, array(
                 '%' => '',  ' ' => '-', '#'  => '-', '"' => '-', '<' => '-',
                 "'" => '-', ':' => '-', '..' => '_', '/' => '-', '_' => '-',
-                '>' => '-',
+                '>' => '-', '‒' => '-', '–' => '-', '—' => '-', '―' => '-',
+                ',' => '-', ';' => '-'
             ));
             $value = Mage::helper('catalog/product_url')->format($value);
             $value = strtr($value, array('ã' => 'a'));
@@ -182,7 +183,7 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
                 '"' => '&quot;', '>' => '&gt;', '<' => '&lt;', "'" => ''
             ));
         }
-        
+
         return $value;
     }
 
@@ -227,18 +228,18 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
         if (!is_scalar($value)) {
             return $attributeCode;
         }
-        
+
         return $value;
     }
 
     /**
-     * Load a single attribute value onto a product. 
-     * 
+     * Load a single attribute value onto a product.
+     *
      * This method is not nice. I only keep it because if it reduces
      * the number of support requests, when people specify attributes
      * in the template string but don't have them loaded on product
      * collections.
-     * 
+     *
      * @param Mage_Catalog_Model_Product $product
      * @param string $attributeCode
      * @return $this
