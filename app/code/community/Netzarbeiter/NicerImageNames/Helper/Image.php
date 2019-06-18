@@ -267,13 +267,23 @@ class Netzarbeiter_NicerImageNames_Helper_Image extends Mage_Catalog_Helper_Imag
         if (!$file) {
             return 0;
         }
-        if ($gallery = $product->getMediaGalleryImages()) {
+        
+        //load the gallery if it is not loaded
+        $gallery = $product->getMediaGalleryImages();
+        if (empty($gallery) == true) {
+            $product->load('media_gallery');
+        }
+
+        if (empty($gallery) == false) {
             foreach ($gallery as $image) {
                 if ($image->getFile() == $file) {
-                    return $image->getPosition(); //return $image->getId();
+                    $position = $image->getPosition(); //return $image->getId();
+                    
+                    return $position;
                 }
             }
         }
+        
         // image not found in media gallery...
         return 0;
     }
